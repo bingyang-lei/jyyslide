@@ -62,6 +62,36 @@
 <!-- 引入 jQuery -->
 {% load static %}
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const editor = document.getElementById('editor');
+    if (!editor) return;
+
+    editor.addEventListener('keydown', function(e) {
+        // 检查是否按下 Ctrl+/
+        if (e.ctrlKey && e.key === '/') {
+            e.preventDefault();
+
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const value = editor.value;
+
+            // 获取选中内容
+            const selected = value.substring(start, end);
+
+            // 包裹为注释
+            const commented = `<!-- ${selected} -->`;
+
+            // 替换选中内容
+            editor.value = value.substring(0, start) + commented + value.substring(end);
+
+            // 重新设置光标位置
+            editor.selectionStart = editor.selectionEnd = start + commented.length;
+        }
+    });
+});
+</script>
 <!-- 与 WebSocket 进行通信的脚本 -->
 <script>
     var slideId = {{ slide.id }};
