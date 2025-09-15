@@ -63,13 +63,13 @@
 {% load static %}
 <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
 
+<!-- 在编辑区实现ctrl+/注释的功能 -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const editor = document.getElementById('editor');
     if (!editor) return;
 
     editor.addEventListener('keydown', function(e) {
-        // 检查是否按下 Ctrl+/
         if (e.ctrlKey && e.key === '/') {
             e.preventDefault();
 
@@ -80,18 +80,45 @@
             // 获取选中内容
             const selected = value.substring(start, end);
 
-            // 包裹为注释
-            const commented = `<!-- ${selected} -->`;
+            // 定义注释包裹形式
+            const commentStart = "<!--\n";
+            const commentEnd = "\n-->";
 
-            // 替换选中内容
-            editor.value = value.substring(0, start) + commented + value.substring(end);
+            // 检查是否已被注释
+            const before = value.substring(0, start);
+            const after = value.substring(end);
 
-            // 重新设置光标位置
-            editor.selectionStart = editor.selectionEnd = start + commented.length;
+            const isCommented = selected.startsWith(commentStart) && selected.endsWith(commentEnd);
+
+            let newText;
+            if (isCommented) {
+                // 去掉注释
+                const uncommented = selected.slice(commentStart.length, selected.length - commentEnd.length);
+                newText = before + uncommented + after;
+
+                // 设置光标到原始起始位置
+                editor.value = newText;
+                editor.selectionStart = start;
+                editor.selectionEnd = start + uncommented.length;
+            } else {
+                // 添加注释
+                const commented = commentStart + selected + commentEnd;
+                newText = before + commented + after;
+
+                editor.value = newText;
+                editor.selectionStart = start;
+                editor.selectionEnd = start + commented.length;
+            }
         }
     });
 });
 </script>
+<!-- 在编辑区实现ctrl+z回退的功能 -->
+<script>
+
+
+</script>
+
 <!-- 与 WebSocket 进行通信的脚本 -->
 <script>
     var slideId = {{ slide.id }};

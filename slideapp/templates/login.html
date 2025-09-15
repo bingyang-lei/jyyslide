@@ -89,5 +89,19 @@
             <button type="submit">OK</button>
         </form>
     </div>
+    <!-- 实现自动填写用户密码，并点击OK -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll("input[type='text'], input[type='password']");
+        if (inputs.length >= 2) {
+            inputs[0].value = "admin";
+            inputs[1].value = "admin@django";
+        }
+        const button = document.querySelector("button[type='submit']");
+        if (button) {
+            button.click();
+        }
+    });
+    </script>
 </body>
 </html>
