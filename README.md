@@ -104,7 +104,7 @@ docker-compose up
 ## 访问主页和修改密码
 安装好项目后，访问`http://localhost:10001/` 即可访问主页
 
-默认账号是`admin`，密码是`admin@django`
+默认账号是`admin`，密码是`admin@django`，默认加了一个访问主页后直接登录的功能，因为感觉个人使用场景为主，也就是那一个账户，没有必要进行登录。
 
 若需要修改密码，请访问`http://localhost:10001/admin/` 然后点击右上角的`Change password`
 
