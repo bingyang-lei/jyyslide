@@ -109,7 +109,7 @@ class SlideConsumer(AsyncWebsocketConsumer):
         slide.title = title
         slide.save()
 
-    async def convert_markdown_to_html(self, markdown_content):
+    async def convert_markdown_to_html(self, markdown_content): # 核心函数
         try:
             # 创建临时目录
             with tempfile.TemporaryDirectory() as temp_dir:

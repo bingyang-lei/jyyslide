@@ -21,27 +21,57 @@ from django.views.decorators.http import require_POST
 def upload_image(request):
     if request.method == 'POST':
         image = request.FILES.get('image')
+        title = request.POST.get('title', 'untitled')
+
         if image and image.content_type.startswith('image/'):
-            # 生成唯一的文件名，防止冲突
+            # 清理标题，避免非法路径
+            safe_title = "".join(c if c.isalnum() or c in ('_', '-') else "_" for c in title)
+
+            # 生成唯一文件名
             ext = os.path.splitext(image.name)[1]
             filename = uuid.uuid4().hex + ext
-            filepath = os.path.join(settings.MEDIA_ROOT, 'uploads', filename)
+            dirpath = os.path.join(settings.MEDIA_ROOT, 'uploads', safe_title)
+            filepath = os.path.join(dirpath, filename)
 
-            # 确保上传目录存在
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+            # 确保目录存在
+            os.makedirs(dirpath, exist_ok=True)
 
             # 保存文件
             with open(filepath, 'wb+') as destination:
                 for chunk in image.chunks():
                     destination.write(chunk)
 
-            # 返回图片的访问 URL
-            url = settings.MEDIA_URL + 'uploads/' + filename
+            # 返回 URL
+            url = f"{settings.MEDIA_URL}uploads/{safe_title}/{filename}"
             return JsonResponse({'url': url})
         else:
             return JsonResponse({'error': '无效的文件'}, status=400)
     else:
         return JsonResponse({'error': '不支持的请求方法'}, status=405)
+# def upload_image(request):
+#     if request.method == 'POST':
+#         image = request.FILES.get('image')
+#         if image and image.content_type.startswith('image/'):
+#             # 生成唯一的文件名，防止冲突
+#             ext = os.path.splitext(image.name)[1]
+#             filename = uuid.uuid4().hex + ext
+#             filepath = os.path.join(settings.MEDIA_ROOT, 'uploads', filename)
+
+#             # 确保上传目录存在
+#             os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+#             # 保存文件
+#             with open(filepath, 'wb+') as destination:
+#                 for chunk in image.chunks():
+#                     destination.write(chunk)
+
+#             # 返回图片的访问 URL
+#             url = settings.MEDIA_URL + 'uploads/' + filename
+#             return JsonResponse({'url': url})
+#         else:
+#             return JsonResponse({'error': '无效的文件'}, status=400)
+#     else:
+#         return JsonResponse({'error': '不支持的请求方法'}, status=405)
 
 
 
