@@ -27,7 +27,7 @@
 
 
 ![auto-upload-img.gif](staticfiles/img/auto-upload-img.gif)
-> 快捷插入图片：可以直接拖拽或者ctrl+v粘贴图片到编辑器中，图片会自动上传到服务器，生成的链接会自动转换成markdown格式，插入到编辑器中
+> 快捷插入图片：可以直接拖拽或者ctrl+v粘贴图片到编辑器中，图片会自动上传到服务器，生成的链接会自动转换成markdown格式，插入到编辑器中。目前所有粘贴的图片会自动保存在`./media`文件夹中，方便备份和迁移
 
 <br><br>
 
